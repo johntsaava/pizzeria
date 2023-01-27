@@ -14,16 +14,22 @@
     "format": "prettier --write \"**/*.+(ts|tsx)\""
   },
   "dependencies": {
+    "@react-three/drei": "^9.53.3",
+    "@react-three/fiber": "^8.10.0",
+    "@react-three/postprocessing": "^2.7.0",
     "@remix-run/express": "^1.11.1",
     "@remix-run/node": "^1.11.1",
     "@remix-run/react": "^1.11.1",
+    "@splinetool/loader": "^0.9.200",
+    "@splinetool/r3f-spline": "^1.0.2",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "express": "^4.18.2",
     "isbot": "^3.6.5",
     "morgan": "^1.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "three": "^0.148.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.11.1",
@@ -31,6 +37,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/three": "^0.148.0",
     "autoprefixer": "^10.4.13",
     "dotenv": "^16.0.3",
     "eslint": "^8.27.0",
