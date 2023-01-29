@@ -6,6 +6,7 @@ module.exports = {
     "three/examples/jsm/loaders/DRACOLoader.js",
     "@splinetool/r3f-spline",
     "@splinetool/loader",
+    "@react-three/cannon",
   ],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
