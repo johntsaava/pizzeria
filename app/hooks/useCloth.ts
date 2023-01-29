@@ -38,6 +38,7 @@ export function useCloth({
             position[2] + (j - Ny * 0.5) * dist,
           ],
           velocity,
+          linearDamping: 0.3,
         }))
       );
     }

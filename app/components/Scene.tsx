@@ -24,8 +24,7 @@ export default function Scene() {
             zoom={1}
             far={100000}
             near={-100000}
-            position={[1144.48, 433.59, 1520.06]}
-            rotation={[-0.5, 0.05, 0.03]}
+            position={[500, 250, 0]}
           />
           <hemisphereLight
             name="Default Ambient Light"

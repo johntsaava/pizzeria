@@ -7,6 +7,41 @@ import { DoubleSide } from "three";
 
 import { useCloth } from "~/hooks/useCloth";
 
+function Tomato({
+  nodes,
+  materials,
+  position = [0, 0, 0],
+  linearDamping,
+}: {
+  nodes: Record<string, any>;
+  materials: Record<string, any>;
+  position?: [number, number, number];
+  linearDamping?: number;
+}) {
+  const [ref] = useCylinder<Group>(() => ({
+    mass: 10,
+    position,
+    args: [40, 40, 15],
+    velocity: [0, -100, 0],
+    linearDamping,
+  }));
+
+  return (
+    <group ref={ref}>
+      <mesh
+        name="Tomato"
+        geometry={nodes.Tomato.geometry}
+        material={materials.tomato}
+        castShadow
+        receiveShadow
+        scale={1}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -5, 0]}
+      />
+    </group>
+  );
+}
+
 function Cheese({
   size = 340,
   divisions = 10,
@@ -71,6 +106,36 @@ export function Pizza({ ...props }) {
 
   return (
     <group {...props} dispose={null}>
+      <Tomato
+        nodes={nodes}
+        materials={materials}
+        position={[0, 300, 0]}
+        linearDamping={0.31}
+      />
+      <Tomato
+        nodes={nodes}
+        materials={materials}
+        position={[70, 300, 70]}
+        linearDamping={0.3}
+      />
+      <Tomato
+        nodes={nodes}
+        materials={materials}
+        position={[-70, 300, 70]}
+        linearDamping={0.29}
+      />
+      <Tomato
+        nodes={nodes}
+        materials={materials}
+        position={[70, 300, -70]}
+        linearDamping={0.295}
+      />
+      <Tomato
+        nodes={nodes}
+        materials={materials}
+        position={[-70, 300, -70]}
+        linearDamping={0.315}
+      />
       <Cheese position={[0, 200, 0]} velocity={[0, -100, 0]} />
       <Bread nodes={nodes} materials={materials} />
     </group>
