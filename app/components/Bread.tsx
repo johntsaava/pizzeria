@@ -4,12 +4,14 @@ import type { Group } from "three";
 export function Bread({
   nodes,
   materials,
+  position = [0, 0, 0],
 }: {
   nodes: Record<string, any>;
   materials: Record<string, any>;
+  position?: [number, number, number];
 }) {
   const [ref] = useCylinder<Group>(() => ({
-    position: [0, 0, 0],
+    position,
     args: [190, 190, 30, 32],
   }));
 

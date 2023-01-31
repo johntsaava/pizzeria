@@ -2,6 +2,7 @@ import useSpline from "@splinetool/r3f-spline";
 
 import { Bread } from "~/components/Bread";
 import { Cheese } from "~/components/Cheese";
+import { Layer, LayerPlacement } from "~/components/Layer";
 import { Tomato } from "~/components/Tomato";
 
 export function Pizza({ ...props }) {
@@ -11,43 +12,37 @@ export function Pizza({ ...props }) {
 
   return (
     <group {...props} dispose={null}>
-      <Tomato
-        nodes={nodes}
-        materials={materials}
+      <Layer
         position={[0, 300, 0]}
-        linearDamping={0.31}
-        velocity={[0, -100, 0]}
-      />
-      <Tomato
-        nodes={nodes}
-        materials={materials}
-        position={[70, 300, 70]}
-        linearDamping={0.3}
-        velocity={[0, -100, 0]}
-      />
-      <Tomato
-        nodes={nodes}
-        materials={materials}
-        position={[-70, 300, 70]}
-        linearDamping={0.29}
-        velocity={[0, -100, 0]}
-      />
-      <Tomato
-        nodes={nodes}
-        materials={materials}
-        position={[70, 300, -70]}
-        linearDamping={0.295}
-        velocity={[0, -100, 0]}
-      />
-      <Tomato
-        nodes={nodes}
-        materials={materials}
-        position={[-70, 300, -70]}
-        linearDamping={0.315}
-        velocity={[0, -100, 0]}
-      />
-      <Cheese position={[0, 200, 0]} velocity={[0, -100, 0]} />
-      <Bread nodes={nodes} materials={materials} />
+        placement={{
+          type: LayerPlacement.Star,
+          count: 5,
+          radius: 100,
+        }}
+      >
+        <Tomato
+          nodes={nodes}
+          materials={materials}
+          linearDamping={0.31}
+          velocity={[0, -200, 0]}
+        />
+      </Layer>
+      <Layer
+        position={[0, 200, 0]}
+        placement={{
+          type: LayerPlacement.Singular,
+        }}
+      >
+        <Cheese velocity={[0, -250, 0]} />
+      </Layer>
+      <Layer
+        position={[0, 0, 0]}
+        placement={{
+          type: LayerPlacement.Singular,
+        }}
+      >
+        <Bread nodes={nodes} materials={materials} />
+      </Layer>
     </group>
   );
 }

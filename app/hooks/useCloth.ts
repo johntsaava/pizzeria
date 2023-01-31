@@ -39,6 +39,7 @@ export function useCloth({
           ],
           velocity,
           linearDamping: 0.3,
+          angularDamping: 0.3,
         }))
       );
     }
