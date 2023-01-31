@@ -17,7 +17,22 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: styles }];
+  return [
+    { rel: "stylesheet", href: styles },
+    {
+      rel: "preconnect",
+      href: "https://fonts.googleapis.com",
+    },
+    {
+      rel: "preconnect",
+      href: "https://fonts.gstatic.com",
+      crossorigin: true,
+    },
+    {
+      href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap",
+      rel: "stylesheet",
+    },
+  ];
 };
 
 export default function App() {
@@ -27,7 +42,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="flex flex-grow flex-col">
+      <body className="flex flex-grow flex-col bg-papaya-400 text-purple-800 antialiased">
+        <header className="p-4">
+          <h1 className="text-center text-4xl font-bold">Pizzeria</h1>
+        </header>
         <Outlet />
         <ScrollRestoration />
         <Scripts />

@@ -5,6 +5,21 @@ import { Cheese } from "~/components/Cheese";
 import { Layer, LayerPlacement } from "~/components/Layer";
 import { Tomato } from "~/components/Tomato";
 
+export const ingredients = {
+  bread: {
+    component: Bread,
+    label: "Bread",
+  },
+  cheese: {
+    component: Cheese,
+    label: "Cheese",
+  },
+  tomato: {
+    component: Tomato,
+    label: "Tomato",
+  },
+};
+
 export function Pizza({ ...props }) {
   const { nodes, materials } = useSpline(
     "https://prod.spline.design/2jPSuxVUuELYf6rU/scene.splinecode"

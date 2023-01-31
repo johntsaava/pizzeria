@@ -23,6 +23,7 @@
     "@remix-run/react": "^1.11.1",
     "@splinetool/loader": "^0.9.200",
     "@splinetool/r3f-spline": "^1.0.2",
+    "clsx": "^1.2.1",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "express": "^4.18.2",
@@ -30,6 +31,7 @@
     "morgan": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.0",
     "three": "^0.148.0"
   },
   "devDependencies": {
