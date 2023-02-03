@@ -5,6 +5,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import "swiper/element";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { MultipleContainers } from "~/components/MultipleContainers";
 import { ingredients } from "~/components/Pizza";
 import Scene from "~/components/Scene";
 import swiperStyles from "~/styles/swiper.min.css";
@@ -107,6 +108,10 @@ export default function Index() {
             </SwiperSlide>
           ))}
         </Swiper>
+      </section>
+
+      <section>
+        <MultipleContainers />
       </section>
     </main>
   );

@@ -14,6 +14,9 @@
     "format": "prettier --write \"**/*.+(ts|tsx)\""
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.0.7",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
     "@react-three/cannon": "^6.5.2",
     "@react-three/drei": "^9.53.3",
     "@react-three/fiber": "^8.10.0",
