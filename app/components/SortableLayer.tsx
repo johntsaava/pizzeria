@@ -21,7 +21,7 @@ export const Layer = React.memo(
         <button
           ref={ref}
           className={clsx(
-            "flex cursor-grab rounded bg-white p-2",
+            "flex cursor-grab rounded p-2 font-bold text-purple-800",
             dragOverlay ? "cursor-grabbing shadow-xl" : "shadow"
           )}
           style={style}
@@ -37,9 +37,10 @@ export const Layer = React.memo(
 type SortableLayerProps = {
   id: UniqueIdentifier;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 };
 
-export function SortableLayer({ id, children }: SortableLayerProps) {
+export function SortableLayer({ id, children, style }: SortableLayerProps) {
   const { isDragging, listeners, transform, transition, setNodeRef } =
     useSortable({
       id,
@@ -53,6 +54,7 @@ export function SortableLayer({ id, children }: SortableLayerProps) {
         transition,
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.5 : undefined,
+        ...style,
       }}
     >
       {children}

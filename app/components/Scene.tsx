@@ -22,7 +22,7 @@ export default function Scene({ className }: SceneProps) {
       }}
     >
       <Stats />
-      <Physics>
+      <Physics isPaused={true}>
         <Debug scale={1.1}>
           <OrbitControls />
           <Pizza />

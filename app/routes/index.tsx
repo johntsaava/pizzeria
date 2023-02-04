@@ -1,4 +1,4 @@
-import type { DropAnimation, UniqueIdentifier } from "@dnd-kit/core";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 import {
   DndContext,
   DragOverlay,
@@ -6,7 +6,6 @@ import {
   MouseSensor,
   TouchSensor,
   closestCenter,
-  defaultDropAnimationSideEffects,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -15,42 +14,43 @@ import {
   rectSortingStrategy,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import type { LinksFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
-import "swiper/element";
-import { Swiper, SwiperSlide } from "swiper/react";
 
-import { ingredients } from "~/components/Pizza";
 import Scene from "~/components/Scene";
 import { Layer, SortableLayer } from "~/components/SortableLayer";
-import swiperStyles from "~/styles/swiper.min.css";
-
-const dropAnimationConfig: DropAnimation = {
-  sideEffects: defaultDropAnimationSideEffects({
-    styles: {
-      active: {
-        opacity: "0.5",
-      },
-    },
-  }),
-};
-
-export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: swiperStyles }];
-};
+import type { Category, Ingredient } from "~/utils/data";
+import { categories, ingredients } from "~/utils/data";
+import { dropAnimationConfig } from "~/utils/dropAnimationConfig";
 
 type FormValues = {
   layers: {
-    type?: keyof typeof ingredients;
+    ingredientId: number;
   }[];
 };
 
+type LoaderData = {
+  categories: Category[];
+  ingredients: Ingredient[];
+};
+
+export const loader: LoaderFunction = () => {
+  return json<LoaderData>({
+    categories,
+    ingredients,
+  });
+};
+
 export default function Index() {
+  const { categories, ingredients } = useLoaderData<LoaderData>();
   const form = useForm<FormValues>({
     defaultValues: {
-      layers: [{ type: "bread" }, { type: "cheese" }],
+      layers: [],
     },
   });
   const layers = useFieldArray({
@@ -78,7 +78,7 @@ export default function Index() {
   }, [activeId]);
 
   return (
-    <main className="flex flex-grow flex-col gap-8 overflow-hidden py-8">
+    <main className="flex flex-grow flex-col gap-8 py-8">
       <section className="container grid flex-grow grid-cols-1 md:grid-cols-2">
         <Scene className="m-auto max-w-md" />
 
@@ -106,65 +106,122 @@ export default function Index() {
         >
           <SortableContext items={layers.fields} strategy={rectSortingStrategy}>
             <div
-              className="flex flex-col-reverse justify-center gap-2"
+              className="flex flex-col-reverse justify-center gap-2 transition-all duration-300 ease-in-out"
               ref={containerRef}
             >
-              {layers.fields.map(({ id, type }) => (
-                <SortableLayer key={id} id={id}>
-                  {type}
-                </SortableLayer>
-              ))}
+              {layers.fields.map(({ id, ingredientId }) => {
+                const ingredient = ingredients.find(
+                  (ingredient) => ingredientId === ingredient.id
+                );
+
+                if (!ingredient) return null;
+
+                return (
+                  <SortableLayer
+                    key={id}
+                    id={id}
+                    style={{
+                      backgroundColor: ingredient.color,
+                    }}
+                  >
+                    {ingredient.label}
+                  </SortableLayer>
+                );
+              })}
             </div>
           </SortableContext>
 
           {typeof document !== "undefined" &&
             createPortal(
               <DragOverlay dropAnimation={dropAnimationConfig}>
-                {activeId ? (
-                  <Layer
-                    dragOverlay
-                    style={{
+                {activeId
+                  ? renderSortableLayerDragOverlay({
                       width: containerRef.current?.clientWidth,
-                    }}
-                  >
-                    {layers.fields[activeIndex].type}
-                  </Layer>
-                ) : null}
+                      ingredient: ingredients.find(
+                        (ingredient) =>
+                          ingredient.id ===
+                          layers.fields[activeIndex].ingredientId
+                      ),
+                    })
+                  : null}
               </DragOverlay>,
               document.body
             )}
         </DndContext>
       </section>
 
-      <section className="flex flex-col items-center">
-        <Swiper
-          slidesPerView="auto"
-          style={{
-            overflow: "visible",
-          }}
-        >
-          {Object.entries(ingredients).map(([type, ingredient]) => (
-            <SwiperSlide
-              key={type}
-              style={{
-                width: "auto",
-                height: "auto",
-              }}
-              className="mr-4 first-of-type:ml-8 last-of-type:mr-8"
-            >
-              <button
-                onClick={() => {
-                  layers.append({ type: "tomato" });
-                }}
-                className="flex items-center justify-center rounded-full border px-3 py-1 shadow disabled:opacity-50"
-                disabled={layers.fields.some((field) => field.type === type)}
-              >
-                {ingredient.label}
-              </button>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <section className="container flex flex-col gap-8">
+        {categories.map((category, i) => (
+          <div
+            key={category.id}
+            className="flex flex-wrap justify-center gap-1"
+          >
+            {ingredients
+              .filter((ingredient) => ingredient.categoryId === category.id)
+              .sort((a, b) => a.label.localeCompare(b.label))
+              .map((ingredient) => {
+                const index = layers.fields.findIndex(
+                  (field) => field.ingredientId === ingredient.id
+                );
+                const isActive = index !== -1;
+                return (
+                  <button
+                    key={ingredient.id}
+                    onClick={() => {
+                      if (isActive) {
+                        layers.remove(index);
+                      } else {
+                        layers.append({
+                          ingredientId: ingredient.id,
+                        });
+                      }
+                    }}
+                    className={clsx(
+                      "flex items-center justify-center rounded-full border-2 px-3 py-1 font-bold text-purple-800",
+                      isActive ? "" : "border-transparent"
+                    )}
+                    style={{
+                      backgroundColor: hexToRgba(
+                        ingredient.color,
+                        isActive ? 0.7 : 0.35
+                      ),
+                    }}
+                  >
+                    {ingredient.label}
+                  </button>
+                );
+              })}
+          </div>
+        ))}
       </section>
     </main>
   );
+}
+
+function renderSortableLayerDragOverlay({
+  width,
+  ingredient,
+}: {
+  width?: number;
+  ingredient?: Ingredient;
+}) {
+  return (
+    <Layer
+      dragOverlay
+      style={{
+        width,
+        backgroundColor: ingredient?.color,
+      }}
+    >
+      {ingredient?.label}
+    </Layer>
+  );
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
