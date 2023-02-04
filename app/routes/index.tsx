@@ -79,8 +79,8 @@ export default function Index() {
 
   return (
     <main className="flex flex-grow flex-col gap-8 overflow-hidden py-8">
-      <section className="container grid flex-grow grid-cols-2">
-        <Scene />
+      <section className="container grid flex-grow grid-cols-1 md:grid-cols-2">
+        <Scene className="m-auto max-w-md" />
 
         <DndContext
           sensors={sensors}

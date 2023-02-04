@@ -2,16 +2,24 @@ import { Debug, Physics } from "@react-three/cannon";
 import { OrbitControls, Stats } from "@react-three/drei";
 import { OrthographicCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import clsx from "clsx";
 
 import { Pizza } from "~/components/Pizza";
 
-export default function Scene() {
+type SceneProps = {
+  className?: string;
+};
+
+export default function Scene({ className }: SceneProps) {
   return (
     <Canvas
       shadows
       flat
       linear
-      className="flex flex-grow flex-col [&>div]:flex [&>div]:flex-grow [&>div]:flex-col"
+      className={clsx("aspect-square", className)}
+      style={{
+        height: "auto",
+      }}
     >
       <Stats />
       <Physics>
