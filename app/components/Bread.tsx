@@ -1,19 +1,23 @@
 import { useCylinder } from "@react-three/cannon";
+import { useContext } from "react";
 import type { Group } from "three";
 
+import { PizzaContext } from "~/components/Pizza";
+
 export function Bread({
-  nodes,
-  materials,
   position = [0, 0, 0],
 }: {
-  nodes: Record<string, any>;
-  materials: Record<string, any>;
   position?: [number, number, number];
 }) {
+  const { nodes, materials } = useContext(PizzaContext);
   const [ref] = useCylinder<Group>(() => ({
     position,
     args: [190, 190, 30, 32],
   }));
+
+  if (!nodes || !materials) {
+    throw new Error("Bread requires nodes and materials");
+  }
 
   return (
     <group ref={ref}>

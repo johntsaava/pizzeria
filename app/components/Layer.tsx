@@ -28,7 +28,7 @@ export function Layer({ placement, position, children }: LayerProps) {
     case LayerPlacement.Star:
       return (
         <>
-          {Array.from({ length: 5 }, (_, i) => {
+          {Array.from({ length: placement.count }, (_, i) => {
             const angle = (i * 2 * Math.PI) / placement.count;
             return React.cloneElement(children, {
               position: [

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Api } from "@react-three/cannon";
-import { useDistanceConstraint, useParticle } from "@react-three/cannon";
+import { useSphere } from "@react-three/cannon";
+import { useDistanceConstraint } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import type { BufferGeometry, Material, Mesh } from "three";
@@ -30,7 +31,7 @@ export function useCloth({
     particles.current.push([]);
     for (let j = 0; j < Ny + 1; j++) {
       particles.current[i].push(
-        useParticle<Mesh>(() => ({
+        useSphere<Mesh>(() => ({
           mass,
           position: [
             position[0] + (i - Nx * 0.5) * dist,
@@ -40,6 +41,7 @@ export function useCloth({
           velocity,
           linearDamping: 0.3,
           angularDamping: 0.3,
+          args: [10],
         }))
       );
     }

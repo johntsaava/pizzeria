@@ -7,21 +7,21 @@ import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import React from "react";
 
-export type LayerProps = {
+export type IngredientCardProps = {
   dragOverlay?: boolean;
   listeners?: DraggableSyntheticListeners;
   style?: React.CSSProperties;
   children?: React.ReactNode;
 };
 
-export const Layer = React.memo(
-  React.forwardRef<HTMLButtonElement, LayerProps>(
+export const IngredientCard = React.memo(
+  React.forwardRef<HTMLButtonElement, IngredientCardProps>(
     ({ dragOverlay, listeners, style, children }, ref) => {
       return (
         <button
           ref={ref}
           className={clsx(
-            "flex cursor-grab rounded p-2 font-bold text-purple-800",
+            "flex cursor-grab rounded border-2 p-2 font-bold",
             dragOverlay ? "cursor-grabbing shadow-xl" : "shadow"
           )}
           style={style}
@@ -34,20 +34,24 @@ export const Layer = React.memo(
   )
 );
 
-type SortableLayerProps = {
+type SortableIngredientCardProps = {
   id: UniqueIdentifier;
   children?: React.ReactNode;
   style?: React.CSSProperties;
 };
 
-export function SortableLayer({ id, children, style }: SortableLayerProps) {
+export function SortableIngredientCard({
+  id,
+  children,
+  style,
+}: SortableIngredientCardProps) {
   const { isDragging, listeners, transform, transition, setNodeRef } =
     useSortable({
       id,
     });
 
   return (
-    <Layer
+    <IngredientCard
       ref={setNodeRef}
       listeners={listeners}
       style={{
@@ -58,6 +62,6 @@ export function SortableLayer({ id, children, style }: SortableLayerProps) {
       }}
     >
       {children}
-    </Layer>
+    </IngredientCard>
   );
 }

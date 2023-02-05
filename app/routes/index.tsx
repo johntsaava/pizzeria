@@ -17,21 +17,27 @@ import {
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import { Bread } from "~/components/Bread";
+import { Cheese } from "~/components/Cheese";
+import {
+  IngredientCard,
+  SortableIngredientCard,
+} from "~/components/IngredientCard";
+import { IngredientComboBox } from "~/components/IngredientComboBox";
+import { Layer, LayerPlacement } from "~/components/Layer";
+import { Pizza } from "~/components/Pizza";
 import Scene from "~/components/Scene";
-import { Layer, SortableLayer } from "~/components/SortableLayer";
+import { Tomato } from "~/components/Tomato";
 import type { Category, Ingredient } from "~/utils/data";
 import { categories, ingredients } from "~/utils/data";
 import { dropAnimationConfig } from "~/utils/dropAnimationConfig";
 
-type FormValues = {
-  layers: {
-    ingredientId: number;
-  }[];
+export type FormValues = {
+  ingredients: Ingredient[];
 };
 
 type LoaderData = {
@@ -47,15 +53,16 @@ export const loader: LoaderFunction = () => {
 };
 
 export default function Index() {
-  const { categories, ingredients } = useLoaderData<LoaderData>();
+  const data = useLoaderData<LoaderData>();
   const form = useForm<FormValues>({
     defaultValues: {
-      layers: [],
+      ingredients: [],
     },
   });
-  const layers = useFieldArray({
+  const ingredients = useFieldArray({
     control: form.control,
-    name: "layers",
+    name: "ingredients",
+    keyName: "uuid",
   });
   const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
   const sensors = useSensors(
@@ -68,7 +75,7 @@ export default function Index() {
   const isFirstAnnouncement = React.useRef(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const getIndex = (id: UniqueIdentifier) =>
-    layers.fields.findIndex((f) => f.id === id);
+    ingredients.fields.findIndex((f) => f.id === id);
   const activeIndex = activeId ? getIndex(activeId) : -1;
 
   React.useEffect(() => {
@@ -78,9 +85,57 @@ export default function Index() {
   }, [activeId]);
 
   return (
-    <main className="flex flex-grow flex-col gap-8 py-8">
-      <section className="container grid flex-grow grid-cols-1 md:grid-cols-2">
-        <Scene className="m-auto max-w-md" />
+    <main className="container grid flex-grow grid-cols-1 md:grid-cols-2">
+      <Scene className="m-auto max-w-md">
+        <Pizza>
+          <Layer
+            position={[0, 0, 0]}
+            placement={{
+              type: LayerPlacement.Singular,
+            }}
+          >
+            <Bread />
+          </Layer>
+          {ingredients.fields.map(({ id, categoryId, color }, i) => {
+            if (categoryId === 3) {
+              return (
+                <Layer
+                  key={id}
+                  position={[0, (i + 1) * 50, 0]}
+                  placement={{
+                    type: LayerPlacement.Singular,
+                  }}
+                >
+                  <Cheese velocity={[0, -10, 0]} color={color} />
+                </Layer>
+              );
+            }
+
+            return (
+              <Layer
+                key={id}
+                position={[0, (i + 1) * 50, 0]}
+                placement={{
+                  type: LayerPlacement.Star,
+                  count: 5,
+                  radius: 100,
+                }}
+              >
+                <Tomato linearDamping={0.31} velocity={[0, -200, 0]} />
+              </Layer>
+            );
+          })}
+        </Pizza>
+      </Scene>
+
+      <section className="flex flex-col gap-4">
+        <IngredientComboBox
+          data={data.ingredients}
+          selectedItems={ingredients.fields}
+          setSelectedItems={(items) => {
+            ingredients.replace(items);
+          }}
+        />
 
         <DndContext
           sensors={sensors}
@@ -98,34 +153,31 @@ export default function Index() {
             if (over) {
               const overIndex = getIndex(over.id);
               if (activeIndex !== overIndex) {
-                layers.move(activeIndex, overIndex);
+                ingredients.move(activeIndex, overIndex);
               }
             }
           }}
           onDragCancel={() => setActiveId(null)}
         >
-          <SortableContext items={layers.fields} strategy={rectSortingStrategy}>
+          <SortableContext
+            items={ingredients.fields}
+            strategy={rectSortingStrategy}
+          >
             <div
-              className="flex flex-col-reverse justify-center gap-2 transition-all duration-300 ease-in-out"
+              className="flex flex-col justify-center gap-2 transition-all duration-300 ease-in-out"
               ref={containerRef}
             >
-              {layers.fields.map(({ id, ingredientId }) => {
-                const ingredient = ingredients.find(
-                  (ingredient) => ingredientId === ingredient.id
-                );
-
-                if (!ingredient) return null;
-
+              {ingredients.fields.map(({ id, color, label }) => {
                 return (
-                  <SortableLayer
+                  <SortableIngredientCard
                     key={id}
                     id={id}
                     style={{
-                      backgroundColor: ingredient.color,
+                      backgroundColor: color,
                     }}
                   >
-                    {ingredient.label}
-                  </SortableLayer>
+                    {label}
+                  </SortableIngredientCard>
                 );
               })}
             </div>
@@ -135,13 +187,9 @@ export default function Index() {
             createPortal(
               <DragOverlay dropAnimation={dropAnimationConfig}>
                 {activeId
-                  ? renderSortableLayerDragOverlay({
+                  ? renderSortableIngredientCardDragOverlay({
                       width: containerRef.current?.clientWidth,
-                      ingredient: ingredients.find(
-                        (ingredient) =>
-                          ingredient.id ===
-                          layers.fields[activeIndex].ingredientId
-                      ),
+                      ingredient: ingredients.fields[activeIndex],
                     })
                   : null}
               </DragOverlay>,
@@ -149,56 +197,11 @@ export default function Index() {
             )}
         </DndContext>
       </section>
-
-      <section className="container flex flex-col gap-8">
-        {categories.map((category, i) => (
-          <div
-            key={category.id}
-            className="flex flex-wrap justify-center gap-1"
-          >
-            {ingredients
-              .filter((ingredient) => ingredient.categoryId === category.id)
-              .sort((a, b) => a.label.localeCompare(b.label))
-              .map((ingredient) => {
-                const index = layers.fields.findIndex(
-                  (field) => field.ingredientId === ingredient.id
-                );
-                const isActive = index !== -1;
-                return (
-                  <button
-                    key={ingredient.id}
-                    onClick={() => {
-                      if (isActive) {
-                        layers.remove(index);
-                      } else {
-                        layers.append({
-                          ingredientId: ingredient.id,
-                        });
-                      }
-                    }}
-                    className={clsx(
-                      "flex items-center justify-center rounded-full border-2 px-3 py-1 font-bold text-purple-800",
-                      isActive ? "" : "border-transparent"
-                    )}
-                    style={{
-                      backgroundColor: hexToRgba(
-                        ingredient.color,
-                        isActive ? 0.7 : 0.35
-                      ),
-                    }}
-                  >
-                    {ingredient.label}
-                  </button>
-                );
-              })}
-          </div>
-        ))}
-      </section>
     </main>
   );
 }
 
-function renderSortableLayerDragOverlay({
+function renderSortableIngredientCardDragOverlay({
   width,
   ingredient,
 }: {
@@ -206,7 +209,7 @@ function renderSortableLayerDragOverlay({
   ingredient?: Ingredient;
 }) {
   return (
-    <Layer
+    <IngredientCard
       dragOverlay
       style={{
         width,
@@ -214,14 +217,6 @@ function renderSortableLayerDragOverlay({
       }}
     >
       {ingredient?.label}
-    </Layer>
+    </IngredientCard>
   );
-}
-
-function hexToRgba(hex: string, alpha: number) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }

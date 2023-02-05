@@ -4,13 +4,14 @@ import { OrthographicCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import clsx from "clsx";
 
-import { Pizza } from "~/components/Pizza";
+import { Plane } from "~/components/Plane";
 
 type SceneProps = {
   className?: string;
+  children?: React.ReactNode;
 };
 
-export default function Scene({ className }: SceneProps) {
+export default function Scene({ className, children }: SceneProps) {
   return (
     <Canvas
       shadows
@@ -22,10 +23,9 @@ export default function Scene({ className }: SceneProps) {
       }}
     >
       <Stats />
-      <Physics isPaused={true}>
+      <Physics isPaused={false}>
         <Debug scale={1.1}>
           <OrbitControls />
-          <Pizza />
           <OrthographicCamera
             name="1"
             makeDefault={true}
@@ -62,6 +62,8 @@ export default function Scene({ className }: SceneProps) {
             shadow-camera-bottom={-1250}
             position={[200, 500, 300]}
           />
+          {children}
+          <Plane />
         </Debug>
       </Physics>
     </Canvas>

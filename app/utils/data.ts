@@ -649,13 +649,13 @@ export const ingredients: Ingredient[] = [
     categoryId: 3,
   },
   {
-    id: 36,
+    id: 107,
     label: "Ranch Dressing",
     color: "#6D2146",
     categoryId: 3,
   },
   {
-    id: 107,
+    id: 108,
     label: "Thousand Island Dressing",
     color: "#216D4F",
     categoryId: 3,
