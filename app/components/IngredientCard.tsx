@@ -21,7 +21,7 @@ export const IngredientCard = React.memo(
         <button
           ref={ref}
           className={clsx(
-            "flex cursor-grab rounded border-2 p-2 font-bold",
+            "flex cursor-grab rounded border bg-white p-2",
             dragOverlay ? "cursor-grabbing shadow-xl" : "shadow"
           )}
           style={style}

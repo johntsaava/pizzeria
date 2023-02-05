@@ -67,7 +67,6 @@ export function IngredientComboBox({
     isOpen,
     highlightedIndex,
     selectedItem,
-    getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getInputProps,
@@ -119,7 +118,7 @@ export function IngredientComboBox({
   });
 
   return (
-    <div className="relative">
+    <div>
       <div className="flex flex-col gap-2">
         <label className="w-fit" {...getLabelProps()}>
           Pick some ingredients:
@@ -146,7 +145,7 @@ export function IngredientComboBox({
                     ),
                   }}
                 >
-                  {selectedItemForRender.label}
+                  {selectedItemForRender.label} ${selectedItemForRender.price}
                   <span
                     className="cursor-pointer px-1"
                     onClick={(e) => {
@@ -162,25 +161,15 @@ export function IngredientComboBox({
           </div>
         )}
 
-        <div className="flex flex-grow gap-0.5">
-          <input
-            placeholder="Best ingredient ever"
-            className="w-full border-b bg-transparent"
-            {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
-          />
-          <button
-            aria-label="toggle menu"
-            className="px-2"
-            type="button"
-            {...getToggleButtonProps()}
-          >
-            &#8595;
-          </button>
-        </div>
+        <input
+          placeholder="Best ingredient ever"
+          className="border-b bg-transparent py-2"
+          {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+        />
       </div>
 
       <ul
-        className={`absolute left-0 right-0 mt-2 max-h-80 overflow-scroll rounded bg-white p-0 shadow-md ${
+        className={`w-inherit absolute mt-2 max-h-80 overflow-scroll rounded bg-white p-0 shadow-md ${
           !(isOpen && items.length) && "hidden"
         }`}
         {...getMenuProps()}

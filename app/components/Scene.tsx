@@ -2,7 +2,6 @@ import { Debug, Physics } from "@react-three/cannon";
 import { OrbitControls, Stats } from "@react-three/drei";
 import { OrthographicCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import clsx from "clsx";
 
 import { Plane } from "~/components/Plane";
 
@@ -13,15 +12,7 @@ type SceneProps = {
 
 export default function Scene({ className, children }: SceneProps) {
   return (
-    <Canvas
-      shadows
-      flat
-      linear
-      className={clsx("aspect-square", className)}
-      style={{
-        height: "auto",
-      }}
-    >
+    <Canvas shadows flat linear className={className}>
       <Stats />
       <Physics isPaused={false}>
         <Debug scale={1.1}>

@@ -85,8 +85,8 @@ export default function Index() {
   }, [activeId]);
 
   return (
-    <main className="container grid flex-grow grid-cols-1 md:grid-cols-2">
-      <Scene className="m-auto max-w-md">
+    <main className="container my-8 grid flex-grow grid-cols-1 md:grid-cols-3">
+      <Scene className="md:col-span-2">
         <Pizza>
           <Layer
             position={[0, 0, 0]}
@@ -169,13 +169,7 @@ export default function Index() {
             >
               {ingredients.fields.map(({ id, color, label }) => {
                 return (
-                  <SortableIngredientCard
-                    key={id}
-                    id={id}
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  >
+                  <SortableIngredientCard key={id} id={id}>
                     {label}
                   </SortableIngredientCard>
                 );
@@ -213,7 +207,6 @@ function renderSortableIngredientCardDragOverlay({
       dragOverlay
       style={{
         width,
-        backgroundColor: ingredient?.color,
       }}
     >
       {ingredient?.label}
