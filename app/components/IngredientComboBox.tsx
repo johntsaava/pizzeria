@@ -1,7 +1,9 @@
 import clsx from "clsx";
 import { useCombobox, useMultipleSelection } from "downshift";
 import React from "react";
+import type { UseFieldArrayReturn } from "react-hook-form";
 
+import type { FormValues } from "~/routes";
 import type { Ingredient } from "~/utils/data";
 import { hexToRgba } from "~/utils/hexToRgba";
 
@@ -31,24 +33,22 @@ function getFilteredIngrediets(
 
 type IngredientComboBoxProps = {
   data: Ingredient[];
-  selectedItems: Ingredient[];
-  setSelectedItems: (items: Ingredient[]) => void;
+  ingredients: UseFieldArrayReturn<FormValues, "ingredients", "uuid">;
 };
 
 export function IngredientComboBox({
   data,
-  selectedItems,
-  setSelectedItems,
+  ingredients,
 }: IngredientComboBoxProps) {
   const [inputValue, setInputValue] = React.useState("");
   const items = React.useMemo(
-    () => getFilteredIngrediets(selectedItems, inputValue, data),
-    [selectedItems, inputValue, data]
+    () => getFilteredIngrediets(ingredients.fields, inputValue, data),
+    [ingredients.fields, inputValue, data]
   );
 
   const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
     useMultipleSelection({
-      selectedItems,
+      selectedItems: ingredients.fields,
       onStateChange({ selectedItems: newSelectedItems, type }) {
         switch (type) {
           case useMultipleSelection.stateChangeTypes
@@ -56,7 +56,7 @@ export function IngredientComboBox({
           case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
           case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
           case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-            setSelectedItems(newSelectedItems ?? []);
+            ingredients.replace(newSelectedItems ?? []);
             break;
           default:
             break;
@@ -103,7 +103,7 @@ export function IngredientComboBox({
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.ItemClick:
           if (newSelectedItem) {
-            setSelectedItems([...selectedItems, newSelectedItem]);
+            ingredients.append(newSelectedItem);
           }
           break;
 
@@ -124,9 +124,9 @@ export function IngredientComboBox({
           Pick some ingredients:
         </label>
 
-        {selectedItems.length > 0 && (
+        {ingredients.fields.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
-            {selectedItems.map(function renderSelectedItem(
+            {ingredients.fields.map(function renderSelectedItem(
               selectedItemForRender,
               index
             ) {
@@ -163,13 +163,13 @@ export function IngredientComboBox({
 
         <input
           placeholder="Best ingredient ever"
-          className="border-b bg-transparent py-2"
+          className="border-b bg-transparent p-2"
           {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
         />
       </div>
 
       <ul
-        className={`w-inherit absolute mt-2 max-h-80 overflow-scroll rounded bg-white p-0 shadow-md ${
+        className={`w-inherit absolute mt-2 max-h-36 overflow-scroll rounded bg-white p-0 shadow-md ${
           !(isOpen && items.length) && "hidden"
         }`}
         {...getMenuProps()}
