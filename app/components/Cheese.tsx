@@ -1,7 +1,5 @@
-// import { useLoader } from "@react-three/fiber";
-import {
-  DoubleSide, //  TextureLoader
-} from "three";
+import { useLoader } from "@react-three/fiber";
+import { DoubleSide, TextureLoader } from "three";
 
 import { useCloth } from "~/hooks/useCloth";
 
@@ -21,18 +19,22 @@ export function Cheese({
   const ref = useCloth({
     Nx: divisions,
     Ny: divisions,
-    mass: 0.1,
+    mass: 10,
     clothSize: size,
     position,
     velocity,
   });
-  // const map = useLoader(TextureLoader, "/textures/cheese.png");
+  const alphaMap = useLoader(TextureLoader, "/textures/sauce.jpg");
 
   return (
     <mesh ref={ref}>
       <planeGeometry args={[1, 1, divisions, divisions]} />
-      {/* <meshPhongMaterial side={DoubleSide} map={map} transparent /> */}
-      <meshPhongMaterial side={DoubleSide} color={color} transparent />
+      <meshBasicMaterial
+        side={DoubleSide}
+        color={color}
+        alphaMap={alphaMap}
+        transparent
+      />
     </mesh>
   );
 }
