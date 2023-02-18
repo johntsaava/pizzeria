@@ -1,40 +1,28 @@
-import { useLoader } from "@react-three/fiber";
-import { DoubleSide, TextureLoader } from "three";
+import { useContext } from "react";
 
-import { useCloth } from "~/hooks/useCloth";
+import { PizzaContext } from "~/components/Pizza";
 
 export function Cheese({
-  size = 340,
-  divisions = 4,
   position = [0, 0, 0],
-  velocity = [0, 0, 0],
-  color = "yellow",
+  color,
+  scale = [1, 1, 1],
 }: {
-  size?: number;
-  divisions?: number;
   position?: [number, number, number];
-  velocity?: [number, number, number];
   color?: string;
+  scale?: [number, number, number];
 }) {
-  const ref = useCloth({
-    Nx: divisions,
-    Ny: divisions,
-    mass: 10,
-    clothSize: size,
-    position,
-    velocity,
-  });
-  const alphaMap = useLoader(TextureLoader, "/textures/sauce.jpg");
+  const { nodes, materials } = useContext(PizzaContext);
+
+  if (!nodes || !materials) {
+    throw new Error("Cheese requires nodes and materials");
+  }
 
   return (
-    <mesh ref={ref}>
-      <planeGeometry args={[1, 1, divisions, divisions]} />
-      <meshBasicMaterial
-        side={DoubleSide}
-        color={color}
-        alphaMap={alphaMap}
-        transparent
-      />
-    </mesh>
+    <group>
+      <mesh name="Cheese" position={position} scale={scale}>
+        <cylinderGeometry args={[160, 160, 12, 32]} />
+        <meshStandardMaterial color={color || "#f5f5f5"} />
+      </mesh>
+    </group>
   );
 }

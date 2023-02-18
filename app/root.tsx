@@ -42,7 +42,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="flex flex-grow flex-col bg-papaya-400 text-purple-800 antialiased">
+      <body className="flex flex-grow flex-col text-purple-800 antialiased">
         <header className="p-4">
           <h1 className="text-center text-4xl font-bold">Pizzeria</h1>
         </header>

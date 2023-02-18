@@ -6,13 +6,15 @@ import { PizzaContext } from "~/components/Pizza";
 
 export function Bread({
   position = [0, 0, 0],
+  scale = [1, 1, 1],
 }: {
   position?: [number, number, number];
+  scale?: [number, number, number];
 }) {
   const { nodes, materials } = useContext(PizzaContext);
   const [ref] = useCylinder<Group>(() => ({
     position,
-    args: [190, 190, 30, 32],
+    args: [160, 160, 20, 32],
   }));
 
   if (!nodes || !materials) {
@@ -27,9 +29,8 @@ export function Bread({
         material={materials.bread}
         castShadow
         receiveShadow
-        scale={1}
-        position={[0, -10, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[Math.PI / 2, 0, 0]}
+        scale={scale}
       />
     </group>
   );
