@@ -7,6 +7,7 @@ module.exports = {
     "@splinetool/r3f-spline",
     "@splinetool/loader",
     "@react-three/cannon",
+    "three/examples/jsm/loaders/GLTFLoader.js",
   ],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",

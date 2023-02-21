@@ -14,9 +14,6 @@
     "format": "prettier --write \"**/*.+(ts|tsx)\""
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.0.7",
-    "@dnd-kit/sortable": "^7.0.2",
-    "@dnd-kit/utilities": "^3.2.1",
     "@radix-ui/react-radio-group": "^1.1.1",
     "@react-three/cannon": "^6.5.2",
     "@react-three/drei": "^9.53.3",
@@ -25,12 +22,9 @@
     "@remix-run/express": "^1.11.1",
     "@remix-run/node": "^1.11.1",
     "@remix-run/react": "^1.11.1",
-    "@splinetool/loader": "^0.9.200",
-    "@splinetool/r3f-spline": "^1.0.2",
     "clsx": "^1.2.1",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
-    "downshift": "^7.2.0",
     "express": "^4.18.2",
     "isbot": "^3.6.5",
     "morgan": "^1.10.0",

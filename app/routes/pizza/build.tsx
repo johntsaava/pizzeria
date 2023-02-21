@@ -4,9 +4,6 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Controller, useForm } from "react-hook-form";
 
-import { Bread } from "~/components/Bread";
-import { Cheese } from "~/components/Cheese";
-import { Layer, LayerPlacement } from "~/components/Layer";
 import { Pizza } from "~/components/Pizza";
 import Scene from "~/components/Scene";
 import type { Ingredient } from "~/utils/data";
@@ -61,33 +58,11 @@ export default function Build() {
     defaultValues: data.defaultValues,
   });
 
-  const sauceId = form.watch("sauceId");
-  const sauce = data.sauces.find((sauce) => sauce.id === Number(sauceId));
-  const size = form.watch("size");
-  const scale = size === "small" ? 0.8 : size === "large" ? 1.2 : 1;
-
   return (
     <main className="container grid flex-grow grid-cols-1 gap-6 p-0 md:grid-cols-2">
       <section>
         <Scene>
-          <Pizza>
-            <Layer
-              position={[0, 0, 0]}
-              placement={{
-                type: LayerPlacement.Singular,
-              }}
-            >
-              <Bread scale={[scale, scale, scale]} />
-            </Layer>
-            <Layer
-              position={[0, 0, 0]}
-              placement={{
-                type: LayerPlacement.Singular,
-              }}
-            >
-              <Cheese color={sauce?.color} scale={[scale, scale, scale]} />
-            </Layer>
-          </Pizza>
+          <Pizza />
         </Scene>
       </section>
 
@@ -110,7 +85,7 @@ export default function Build() {
                 {data.sizes.map(({ value, label }) => (
                   <RadioGroup.Item
                     key={value}
-                    className="h-16 w-16 rounded-full border border-opal-400 outline-none hover:bg-opal-400 hover:text-white data-[state=checked]:bg-opal-400 data-[state=checked]:text-white data-[state=checked]:shadow-lg"
+                    className="h-16 w-16 rounded-full border border-black outline-none hover:bg-black hover:text-white data-[state=checked]:bg-black data-[state=checked]:text-white"
                     value={value}
                     id={value}
                   >
@@ -140,17 +115,11 @@ export default function Build() {
                 {data.sauces.map(({ id, label, color }) => (
                   <RadioGroup.Item
                     key={id}
-                    className="group h-12 rounded-full border px-5 outline-none hover:bg-current data-[state=checked]:bg-current data-[state=checked]:shadow-lg"
+                    className="group h-12 rounded-full border px-5 outline-none hover:bg-black hover:text-white data-[state=checked]:bg-black data-[state=checked]:text-white"
                     value={String(id)}
                     id={String(id)}
-                    style={{
-                      color: color,
-                    }}
                   >
-                    <label
-                      htmlFor={String(id)}
-                      className="pointer-events-none group-hover:text-white group-data-[state=checked]:text-white"
-                    >
+                    <label htmlFor={String(id)} className="pointer-events-none">
                       {label}
                     </label>
                   </RadioGroup.Item>

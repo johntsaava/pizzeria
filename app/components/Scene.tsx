@@ -11,7 +11,7 @@ type SceneProps = {
 
 export default function Scene({ children }: SceneProps) {
   return (
-    <Canvas shadows flat linear>
+    <Canvas shadows flat>
       <Stats />
       <Physics>
         <OrbitControls />
@@ -40,7 +40,7 @@ export default function Scene({ children }: SceneProps) {
         />
         <directionalLight
           name="Directional Light"
-          intensity={0.7}
+          intensity={1}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
           shadow-camera-near={-10000}
