@@ -69,16 +69,21 @@ export default function Build() {
   const form = useForm<FormValues>({
     defaultValues: data.defaultValues,
   });
+  const size = form.watch("size");
 
   return (
     <main className="container grid flex-grow grid-cols-1 gap-6 p-0 md:grid-cols-2">
       <section>
-        <Scene>
-          <Pizza />
-        </Scene>
+        <div className="aspect-square">
+          <Scene>
+            <Pizza
+              scale={size === "small" ? 0.5 : size === "medium" ? 0.75 : 1}
+            />
+          </Scene>
+        </div>
       </section>
 
-      <section>
+      <section className="p-6">
         <form>
           <h2>Size:</h2>
           <div className="h-4" />

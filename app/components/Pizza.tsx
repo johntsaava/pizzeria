@@ -2,7 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 
-export function Pizza() {
+export function Pizza({ scale = 1 }: { scale?: number }) {
   const materials = useLoader(
     MTLLoader,
     "/pizza/cheese_tomato/cheese_tomato.mtl"
@@ -12,5 +12,5 @@ export function Pizza() {
     loader.setMaterials(materials);
   });
 
-  return <primitive object={object} scale={50} />;
+  return <primitive object={object} scale={50 * scale} />;
 }
