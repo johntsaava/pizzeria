@@ -6,17 +6,23 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Pizza } from "~/components/Pizza";
 import Scene from "~/components/Scene";
-import type { Ingredient } from "~/utils/data";
-import { ingredients } from "~/utils/data";
+
+export type Ingredient = {
+  id: number;
+  label: string;
+  color: string;
+  price: number;
+  categoryId: number;
+};
 
 export type FormValues = {
   size: string;
-  sauceId?: string;
+  baseId?: string;
 };
 
 type LoaderData = {
   defaultValues: FormValues;
-  sauces: Ingredient[];
+  bases: Ingredient[];
   sizes: {
     value: string;
     label: string;
@@ -24,17 +30,23 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = () => {
-  const sauces = ingredients.filter(
-    (ingredient) => ingredient.categoryId === 3
-  );
-  const firstSauce = sauces[0];
+  const bases = [
+    {
+      id: 1,
+      label: "Cheese & Tomato",
+      color: "",
+      price: 2.5,
+      categoryId: 1,
+    },
+  ];
+  const firstBase = bases[0];
 
   return json<LoaderData>({
     defaultValues: {
-      size: "medium",
-      sauceId: firstSauce ? String(firstSauce.id) : undefined,
+      size: "large",
+      baseId: firstBase ? String(firstBase.id) : undefined,
     },
-    sauces,
+    bases,
     sizes: [
       {
         value: "small",
@@ -98,21 +110,21 @@ export default function Build() {
             )}
           />
           <div className="h-8" />
-          <h2>Sauce:</h2>
+          <h2>Base:</h2>
           <div className="h-4" />
           <Controller
-            name="sauceId"
+            name="baseId"
             control={form.control}
             render={({ field }) => (
               <RadioGroup.Root
                 className="flex flex-wrap gap-4"
-                aria-label="Sauce"
+                aria-label="Base"
                 value={field.value}
                 onValueChange={(value) => {
                   field.onChange(value);
                 }}
               >
-                {data.sauces.map(({ id, label, color }) => (
+                {data.bases.map(({ id, label, color }) => (
                   <RadioGroup.Item
                     key={id}
                     className="group h-12 rounded-full border px-5 outline-none hover:bg-black hover:text-white data-[state=checked]:bg-black data-[state=checked]:text-white"
