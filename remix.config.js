@@ -8,6 +8,8 @@ module.exports = {
     "@splinetool/loader",
     "@react-three/cannon",
     "three/examples/jsm/loaders/GLTFLoader.js",
+    "three/examples/jsm/loaders/MTLLoader.js",
+    "three/examples/jsm/loaders/OBJLoader.js",
   ],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",

@@ -1,0 +1,5 @@
+# Blender 3.4.1 MTL File: 'cheese_pizza.blend'
+# www.blender.org
+
+newmtl pizza
+map_Kd cheese_tomato.jpg
